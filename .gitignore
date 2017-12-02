@@ -1,0 +1,10 @@
+# Vim
+*~
+
+# build
+bin/
+obj/
+
+# NuGet
+packages/
+
