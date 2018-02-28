@@ -7,8 +7,8 @@ namespace Drawille.NET
         private readonly Canvas _canvas;
 
         public bool PenDown { get; private set; }
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public float X { get; private set; }
+        public float Y { get; private set; }
         public float Rotation { get; private set; }
 
         public Turtle(Canvas canvas)
@@ -34,10 +34,19 @@ namespace Drawille.NET
             return this;
         }
 
-        public Turtle Move(int x, int y)
+        public Turtle Move(float x, float y)
         {
+            if (x < 0)
+                x = 0;
+            if (x >= _canvas.Width)
+                x = _canvas.Width - 1;
+            if (y < 0)
+                y = 0;
+            if (y >= _canvas.Height)
+                y = _canvas.Height - 1;
+
             if (PenDown)
-                _canvas.LineSet(X, Y, x, y);
+                _canvas.LineSet((int) X, (int) Y, (int) x, (int) y);
             X = x;
             Y = y;
             return this;
@@ -45,8 +54,8 @@ namespace Drawille.NET
 
         public Turtle Forward(float step)
         {
-            var tx = (int) (X + Math.Cos(Rotation) * step);
-            var ty = (int) (Y + Math.Sin(Rotation) * step);
+            var tx = (float) (X + Math.Cos(Rotation) * step);
+            var ty = (float) (Y + Math.Sin(Rotation) * step);
             Move(tx, ty);
             return this;
         }

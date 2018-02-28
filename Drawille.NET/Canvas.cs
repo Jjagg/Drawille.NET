@@ -42,20 +42,23 @@ namespace Drawille.NET
         {
             return (_chars[Coord(x, y)] & Mask(x, y)) > 0;
         }
-
+        
         public void Set(int x, int y)
         {
-            _chars[Coord(x, y)] |= Mask(x, y);
+            if (0 <= x && x < Width && 0 <= y && y < Height)
+                _chars[Coord(x, y)] |= Mask(x, y);
         }
 
         public void Unset(int x, int y)
         {
-            _chars[Coord(x, y)] &= ~Mask(x, y);
+            if (0 <= x && x < Width && 0 <= y && y < Height)
+                _chars[Coord(x, y)] &= ~Mask(x, y);
         }
 
         public void Toggle(int x, int y)
         {
-            _chars[Coord(x, y)] ^= Mask(x, y);
+            if (0 <= x && x < Width && 0 <= y && y < Height)
+                _chars[Coord(x, y)] ^= Mask(x, y);
         }
 
         private int Coord(int x, int y)
@@ -70,25 +73,25 @@ namespace Drawille.NET
             return PixelMap[y % 4, x % 2];
         }
 
-        private static readonly StringBuilder Sb = new StringBuilder();
+        private readonly StringBuilder _sb = new StringBuilder();
 
         public IEnumerable<string> Rows()
         {
-            lock (Sb)
+            lock (_sb)
             {
-                Sb.Clear();
+                _sb.Clear();
                 for (int i = 0, j = 0; i < _chars.Length; i++, j++)
                 {
                     if (j == Width / 2)
                     {
-                        yield return Sb.ToString();
-                        Sb.Clear();
+                        yield return _sb.ToString();
+                        _sb.Clear();
                         j = 0;
                     }
-                    Sb.Append(_chars[i] == 0 ? ' ' : Convert.ToChar(CharOffset + _chars[i]));
+                    _sb.Append(_chars[i] == 0 ? ' ' : Convert.ToChar(CharOffset + _chars[i]));
                 }
-                if (Sb.Length > 0)
-                    yield return Sb.ToString();
+                if (_sb.Length > 0)
+                    yield return _sb.ToString();
             }
         }
     }
